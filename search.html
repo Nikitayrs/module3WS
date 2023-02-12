@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/jquery-3.6.0.js"></script>
+    <script src="assets/js/main.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <section class="mt-5">
+            <div class="d-flex justify-content-between align-items-start">
+                <h2 class="mb-4">
+                    We found the following flights
+                </h2>
+                <a href="index.html" class="btn btn-sm btn-secondary test-4-bback">Back</a>
+            </div>
+
+            <h5 class="mt-4 mb-3">
+                <span class="test-4-fif1">Kazan</span>
+                ->
+                <span class="test-4-fit1">Moscow</span>
+            </h5>
+            <table class="table table-hover table-bordered flights-to">
+                <tr>
+                    <th>Flight</th>
+                    <th>Date and time of departure</th>
+                    <th>Arrival time</th>
+                    <th>Flight time</th>
+                    <th>Cost</th>
+                </tr>
+            </table>
+
+            <h5 class="mt-4 mb-3">
+                <span class="test-4-fif2">Moscow</span>
+                ->
+                <span class="test-4-fit2">Kazan</span>
+            </h5>
+            <table class="table table-hover table-bordered flights-back">
+                <tr>
+                    <th>Flight</th>
+                    <th>Date and time of departure</th>
+                    <th>Arrival time</th>
+                    <th>Flight time</th>
+                    <th>Cost</th>
+                </tr>
+            </table>
+
+            <a href="booking.html" class="btn btn-primary test-4-bgobook mt-4">Go to booking</a>
+        </section>
+
+    </div>
+
+    <script>
+        sendRequest('flight' + location.search, function (response, code) {
+            if (code !== 200) {
+                return false
+            }
+
+            response.data.flights_to.forEach(flight => {
+                let arrivalTime = getArrivalTime(flight.from.time, flight.to.time);
+
+                $('.test-4-fif1').text(flight.from.city);
+                $('.test-4-fit1').text(flight.to.city);
+
+                $('.flights-to').append(`
+                <tr>
+                    <td class="test-4-fn">${flight.flight_code}</td>
+                    <td>
+                        <span class="test-4-dd">${flight.from.date}</span>
+                        at
+                        <span class="test-4-dt">${flight.from.time}</span>
+                    </td>
+                    <td class="test-4-aatime">${flight.to.time}</td>
+                    <td class="test-4-ft">
+                        <span class="test-4-fhour">${arrivalTime.hours}</span>h
+                        <span class="test-4-fminutes">${arrivalTime.minutes}</span>min
+                    </td>
+                    <td class="test-4-fp">${flight.cost}</td>
+                </tr>
+                `)
+            })
+
+            response.data.flights_back.forEach(flight => {
+                let arrivalTime = getArrivalTime(flight.from.time, flight.to.time);
+
+                $('.test-4-fif2').text(flight.from.city);
+                $('.test-4-fit2').text(flight.to.city);
+
+                $('.flights-back').append(`
+                <tr>
+                    <td class="test-4-fn">${flight.flight_code}</td>
+                    <td>
+                        <span class="test-4-dd">${flight.from.date}</span>
+                        at
+                        <span class="test-4-dt">${flight.from.time}</span>
+                    </td>
+                    <td class="test-4-aatime">${flight.to.time}</td>
+                    <td class="test-4-ft">
+                        <span class="test-4-fhour">${arrivalTime.hours}</span>h
+                        <span class="test-4-fminutes">${arrivalTime.minutes}</span>min
+                    </td>
+                    <td class="test-4-fp">${flight.cost}</td>
+                </tr>
+                `);
+            })
+        });
+    </script>
+
+</body>
+
+</html>
